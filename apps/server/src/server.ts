@@ -66,36 +66,9 @@ app.use(
   expressMiddleware(server),
 );
 
-export const startServer = () => {
+export const startServer = async () => {
   const port = process.env.PORT || 5000;
-  const hs = httpServer.listen(port, () => {
+  return httpServer.listen(port, () => {
     console.log(`server started on http://localhost:${port}`);
-  });
-
-  //////////////////////////////////////////////////////////////////////
-  const signals = ["SIGTERM", "SIGINT", "SIGHUP", "SIGBREAK"];
-  const errorTypes = ["unhandledRejection", "uncaughtException"];
-
-  errorTypes.forEach((type) => {
-    process.on(type, async (error) => {
-      try {
-        console.error(`process exit due to ${type}`);
-        console.error(error);
-        process.exit(1);
-      } catch (_) {
-        process.exit(1);
-      }
-    });
-  });
-
-  signals.forEach((type) => {
-    process.on(type, () => {
-      console.log(`${type} signal received.`);
-      console.log("Closing http server.");
-      hs.close((err) => {
-        console.log("Http server closed.");
-        process.exit(err ? 1 : 0);
-      });
-    });
   });
 };
