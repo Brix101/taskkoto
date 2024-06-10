@@ -69,7 +69,7 @@ app.use(
 export const startServer = () => {
   const port = process.env.PORT || 5000;
   const hs = httpServer.listen(port, () => {
-    console.log(`server started on http://localhost:${port}IGraphQLContext`);
+    console.log(`server started on http://localhost:${port}`);
   });
 
   //////////////////////////////////////////////////////////////////////
