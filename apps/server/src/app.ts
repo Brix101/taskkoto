@@ -55,6 +55,7 @@ const app = express();
 const yoga = createYoga({
   schema: schema,
   logging: true,
+  graphiql: true,
 });
 
 // Bind GraphQL Yoga to the graphql endpoint to avoid rendering the playground on any path
