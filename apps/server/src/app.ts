@@ -19,6 +19,8 @@ const users = [
 
 export const schema = makeExecutableSchema({
   typeDefs: /* GraphQL */ `
+    scalar File
+
     type User {
       id: ID!
       login: String!
@@ -31,7 +33,8 @@ export const schema = makeExecutableSchema({
   resolvers: {
     Query: {
       hello: () => "world",
-      user: async (_, args) => {
+      user: async (_, args, ctx) => {
+        console.log(ctx.req.headers);
         const user = users.find((user) => user.id === args.byId);
         if (!user) {
           throw createGraphQLError(`User with id '${args.byId}' not found.`, {
