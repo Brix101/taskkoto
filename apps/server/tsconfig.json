@@ -27,7 +27,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "experimentalDecorators": true, // add this line
+    "emitDecoratorMetadata": true // add this line
   },
+  "include": ["./src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

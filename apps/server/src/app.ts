@@ -1,4 +1,5 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
+import { MikroORM } from "@mikro-orm/core";
 import express from "express";
 import { createGraphQLError, createYoga } from "graphql-yoga";
 
@@ -62,6 +63,8 @@ const yoga = createYoga({
 app.use(yoga.graphqlEndpoint, yoga);
 
 export const startServer = async () => {
+  const orm = await MikroORM.init();
+
   const port = process.env.PORT || 5000;
   return app.listen(port, () => {
     console.log(
