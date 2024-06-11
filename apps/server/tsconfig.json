@@ -1,17 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "rootDirs": [
-      "src"
-    ],
+    "rootDirs": ["src"],
     "outDir": "dist",
     /** Base Options */
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "ES2022",
-    "lib": [
-      "ES2022"
-    ],
+    "lib": ["ES2022"],
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
@@ -27,18 +23,11 @@
     "moduleResolution": "node",
     /** Emit types for internal packages to speed up editor performance. */
     "noEmit": true,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "exclude": ["node_modules", "dist"]
 }

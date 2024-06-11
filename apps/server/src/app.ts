@@ -1,74 +1,69 @@
+import { makeExecutableSchema } from "@graphql-tools/schema";
 import express from "express";
-import { ApolloServer } from "@apollo/server";
-import { expressMiddleware } from "@apollo/server/express4";
-import cors from "cors";
-import http from "http";
-import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { createGraphQLError, createYoga } from "graphql-yoga";
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
-const typeDefs = `#graphql
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
-  }
-
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book]
-  }
-`;
-
-const books = [
+const users = [
   {
-    title: "The Awakening",
-    author: "Kate Chopin",
+    id: "1",
+    login: "Laurin",
   },
   {
-    title: "City of Glass",
-    author: "Paul Auster",
+    id: "2",
+    login: "Saihaj",
+  },
+  {
+    id: "3",
+    login: "Dotan",
   },
 ];
 
-// Resolvers define how to fetch the types defined in your schema.
-// This resolver retrieves books from the "books" array above.
-const resolvers = {
-  Query: {
-    books: () => books,
+export const schema = makeExecutableSchema({
+  typeDefs: /* GraphQL */ `
+    type User {
+      id: ID!
+      login: String!
+    }
+    type Query {
+      hello: String
+      user(byId: ID!): User!
+    }
+  `,
+  resolvers: {
+    Query: {
+      hello: () => "world",
+      user: async (_, args) => {
+        const user = users.find((user) => user.id === args.byId);
+        if (!user) {
+          throw createGraphQLError(`User with id '${args.byId}' not found.`, {
+            extensions: {
+              code: "USER_NOT_FOUND",
+              someRandomExtensions: {
+                aaaa: 3,
+              },
+            },
+          });
+        }
+
+        return user;
+      },
+    },
   },
-};
-
-interface MyContext {}
-
-const app = express();
-const httpServer = http.createServer(app);
-
-const server = new ApolloServer<MyContext>({
-  typeDefs,
-  resolvers,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
-// Note you must call `start()` on the `ApolloServer`
-// instance before passing the instance to `expressMiddleware`
-await server.start();
+const app = express();
+const yoga = createYoga({
+  schema: schema,
+  logging: true,
+});
 
-app.use(
-  "/graphql",
-  cors<cors.CorsRequest>(),
-  express.json(),
-  expressMiddleware(server),
-);
+// Bind GraphQL Yoga to the graphql endpoint to avoid rendering the playground on any path
+app.use(yoga.graphqlEndpoint, yoga);
 
 export const startServer = async () => {
   const port = process.env.PORT || 5000;
-  return httpServer.listen(port, () => {
-    console.log(`server started on http://localhost:${port}`);
+  return app.listen(port, () => {
+    console.log(
+      `server started on http://localhost:${port}${yoga.graphqlEndpoint}`
+    );
   });
 };
