@@ -19,8 +19,6 @@ const users = [
 
 export const schema = makeExecutableSchema({
   typeDefs: /* GraphQL */ `
-    scalar File
-
     type User {
       id: ID!
       login: String!
