@@ -46,8 +46,9 @@
     "vitest": "^1.6.0"
   },
   "mikro-orm": {
-    "tsConfigPath": "./tsconfig.json",
     "useTsNode": true,
-    "alwaysAllowTs": true
+    "configPaths": [
+      "./dist/mikro-orm.config.js"
+    ]
   }
 }
