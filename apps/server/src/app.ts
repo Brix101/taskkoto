@@ -1,7 +1,21 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { MikroORM } from "@mikro-orm/core";
+import {
+  Connection,
+  EntityManager,
+  IDatabaseDriver,
+  MikroORM,
+} from "@mikro-orm/core";
 import express from "express";
-import { createGraphQLError, createYoga } from "graphql-yoga";
+import {
+  YogaInitialContext,
+  createGraphQLError,
+  createYoga,
+} from "graphql-yoga";
+import { User } from "./modules/user/entities/user.entity";
+
+type GraphQLContext = YogaInitialContext & {
+  em: EntityManager<IDatabaseDriver<Connection>>;
+};
 
 const users = [
   {
@@ -32,8 +46,8 @@ export const schema = makeExecutableSchema({
   resolvers: {
     Query: {
       hello: () => "world",
-      user: async (_, args, ctx) => {
-        console.log(ctx.req.headers);
+      user: async (_, args, ctx: GraphQLContext) => {
+        console.log(ctx.em.findAll(User));
         const user = users.find((user) => user.id === args.byId);
         if (!user) {
           throw createGraphQLError(`User with id '${args.byId}' not found.`, {
@@ -53,17 +67,26 @@ export const schema = makeExecutableSchema({
 });
 
 const app = express();
-const yoga = createYoga({
-  schema: schema,
-  logging: true,
-  graphiql: true,
-});
-
-// Bind GraphQL Yoga to the graphql endpoint to avoid rendering the playground on any path
-app.use(yoga.graphqlEndpoint, yoga);
 
 export const startServer = async () => {
   const orm = await MikroORM.init();
+  const migrator = orm.getMigrator();
+  const migrations = await migrator.getPendingMigrations();
+  if (migrations && migrations.length > 0) {
+    await migrator.up();
+  }
+
+  const em = orm.em.fork();
+
+  const yoga = createYoga<{}, GraphQLContext>({
+    schema: schema,
+    logging: true,
+    graphiql: true,
+    context: (ctx) => ({ ...ctx, em }),
+  });
+
+  // Bind GraphQL Yoga to the graphql endpoint to avoid rendering the playground on any path
+  app.use(yoga.graphqlEndpoint, yoga);
 
   const port = process.env.PORT || 5000;
   return app.listen(port, () => {

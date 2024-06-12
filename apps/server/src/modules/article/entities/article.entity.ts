@@ -1,5 +1,5 @@
-import { BaseEntity } from "@/modules/common/base.entity.js";
-import { User } from "@/modules/user/user.entity.js";
+import { CommonEntity } from "@/common/common.entity";
+import { User } from "@/modules/user/entities/user.entity";
 import { Entity, ManyToOne, Property, t } from "@mikro-orm/core";
 
 function convertToSlug(text: string) {
@@ -10,7 +10,7 @@ function convertToSlug(text: string) {
 }
 
 @Entity()
-export class Article extends BaseEntity {
+export class Article extends CommonEntity {
   @Property({ unique: true })
   slug!: string;
 

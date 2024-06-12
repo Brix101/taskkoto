@@ -13,6 +13,8 @@ services:
     #    target: /dev/shm
     #    tmpfs:
     #      size: 134217728 # 128*2^20 bytes = 128Mb
+    ports:
+      - "5433:5432" # "host:container"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
