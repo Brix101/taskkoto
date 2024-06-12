@@ -1,40 +1,29 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "rootDirs": ["src"],
+    "rootDir": "src",
     "outDir": "dist",
-    /** Base Options */
-    "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "ES2022",
     "lib": ["ES2022"],
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
-    /** Keep TSC performant in monorepos */
-    "incremental": true,
-    "disableSourceOfProjectReferenceRedirect": true,
-    /** Strictness */
+    "sourceMap": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
-    /** Transpile using Bundler (not tsc) */
     "module": "ESNEXT",
     "moduleResolution": "node",
-    /** Emit types for internal packages to speed up editor performance. */
-    "noEmit": true,
     "types": ["node"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    },
-    "experimentalDecorators": true, // add this line
-    "emitDecoratorMetadata": true // add this line
+    }
   },
   "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules", "dist"],
-  "ts-node": {
-    "esm": true,
-    "transpileOnly": true
-  }
+  "exclude": ["node_modules", "dist"]
 }
