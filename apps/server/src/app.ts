@@ -66,7 +66,7 @@ export const schema = makeExecutableSchema({
   },
 });
 
-const app = express();
+   const app = express();
 
 export const startServer = async () => {
   const orm = await MikroORM.init();
