@@ -1,15 +1,11 @@
-import { makeExecutableSchema } from "@graphql-tools/schema";
 import { Connection, EntityManager, IDatabaseDriver } from "@mikro-orm/core";
 import express from "express";
-import {
-  YogaInitialContext,
-  createGraphQLError,
-  createYoga,
-} from "graphql-yoga";
+import { YogaInitialContext, createYoga } from "graphql-yoga";
+import { buildSchema } from "type-graphql";
 import { initORM } from "./db.js";
-import { User } from "./modules/user/entities/user.entity.js";
+import { UsersResolver } from "./modules/users/users.resolver.js";
 
-type GraphQLContext = YogaInitialContext & {
+export type GraphQLContext = YogaInitialContext & {
   em: EntityManager<IDatabaseDriver<Connection>>;
 };
 
@@ -28,41 +24,6 @@ const users = [
   },
 ];
 
-export const schema = makeExecutableSchema({
-  typeDefs: /* GraphQL */ `
-    type User {
-      id: ID!
-      login: String!
-    }
-    type Query {
-      hello: String
-      user(byId: ID!): User!
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: () => "world",
-      user: async (_, args, ctx: GraphQLContext) => {
-        const dbUsers = await ctx.em.findAll(User);
-        console.log(dbUsers);
-        const user = users.find((user) => user.id === args.byId);
-        if (!user) {
-          throw createGraphQLError(`User with id '${args.byId}' not found.`, {
-            extensions: {
-              code: "USER_NOT_FOUND",
-              someRandomExtensions: {
-                aaaa: 3,
-              },
-            },
-          });
-        }
-
-        return user;
-      },
-    },
-  },
-});
-
 const app = express();
 
 export const startServer = async () => {
@@ -72,6 +33,10 @@ export const startServer = async () => {
   if (migrations && migrations.length > 0) {
     await migrator.up();
   }
+
+  const schema = await buildSchema({
+    resolvers: [UsersResolver],
+  });
 
   const yoga = createYoga<{}, GraphQLContext>({
     schema: schema,

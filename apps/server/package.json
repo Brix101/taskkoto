@@ -7,7 +7,7 @@
     "dev": "tsx watch ./src/index.ts",
     "build": "tsc && npx mikro-orm-esm cache:generate --combined",
     "start": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/server.ts",
-    "migrate:create": "mikro-orm migration:create"
+    "migrate:create": "mikro-orm-esm migration:create"
   },
   "keywords": [],
   "dependencies": {
@@ -23,8 +23,10 @@
     "eslint-plugin-prettier": "^5.1.3",
     "express": "^4.19.2",
     "graphql": "^16.8.1",
+    "graphql-scalars": "^1.23.0",
     "graphql-yoga": "^5.3.1",
-    "prettier": "^3.3.2"
+    "prettier": "^3.3.2",
+    "type-graphql": "2.0.0-rc.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.4.0",
