@@ -17,6 +17,6 @@ export class Users extends BaseEntity {
   password!: string;
 
   @Field(() => String)
-  @Property({ type: "text" })
-  bio = "";
+  @Property({ type: "text", nullable: true })
+  bio?: string;
 }
