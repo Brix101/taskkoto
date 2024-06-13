@@ -1,5 +1,5 @@
 import { GeneratedCacheAdapter, defineConfig } from "@mikro-orm/core";
-import { Migrator } from "@mikro-orm/migrations"; // or `@mikro-orm/migrations-mongodb`
+import { Migrator, TSMigrationGenerator } from "@mikro-orm/migrations"; // or `@mikro-orm/migrations-mongodb`
 import { Options, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { SqlHighlighter } from "@mikro-orm/sql-highlighter";
 import { existsSync, readFileSync } from "node:fs";
@@ -31,6 +31,8 @@ export default defineConfig({
     path: "src/migrations",
     tableName: "mikro_orm_migrations", // name of database table with log of executed transactions
     transactional: true,
+    emit: "ts", // migration generation mode
+    generator: TSMigrationGenerator, // migration generator, e.g. to allow custom formatting
   },
   driver: PostgreSqlDriver,
   dbName: "postgres", // replace with your database name
