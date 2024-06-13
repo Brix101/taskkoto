@@ -1,17 +1,13 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import {
-  Connection,
-  EntityManager,
-  IDatabaseDriver,
-  MikroORM,
-} from "@mikro-orm/core";
+import { Connection, EntityManager, IDatabaseDriver } from "@mikro-orm/core";
 import express from "express";
 import {
   YogaInitialContext,
   createGraphQLError,
   createYoga,
 } from "graphql-yoga";
-import { User } from "./modules/user/entities/user.entity";
+import { initORM } from "./db.js";
+import { User } from "./modules/user/entities/user.entity.js";
 
 type GraphQLContext = YogaInitialContext & {
   em: EntityManager<IDatabaseDriver<Connection>>;
@@ -47,7 +43,8 @@ export const schema = makeExecutableSchema({
     Query: {
       hello: () => "world",
       user: async (_, args, ctx: GraphQLContext) => {
-        console.log(ctx.em.findAll(User));
+        const dbUsers = await ctx.em.findAll(User);
+        console.log(dbUsers);
         const user = users.find((user) => user.id === args.byId);
         if (!user) {
           throw createGraphQLError(`User with id '${args.byId}' not found.`, {
@@ -66,23 +63,21 @@ export const schema = makeExecutableSchema({
   },
 });
 
-   const app = express();
+const app = express();
 
 export const startServer = async () => {
-  const orm = await MikroORM.init();
-  const migrator = orm.getMigrator();
+  const db = await initORM();
+  const migrator = db.orm.getMigrator();
   const migrations = await migrator.getPendingMigrations();
   if (migrations && migrations.length > 0) {
     await migrator.up();
   }
 
-  const em = orm.em.fork();
-
   const yoga = createYoga<{}, GraphQLContext>({
     schema: schema,
     logging: true,
     graphiql: true,
-    context: (ctx) => ({ ...ctx, em }),
+    context: (ctx) => ({ ...ctx, em: db.em }),
   });
 
   // Bind GraphQL Yoga to the graphql endpoint to avoid rendering the playground on any path

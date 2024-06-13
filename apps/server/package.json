@@ -5,7 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "dev": "tsx watch ./src/index.ts",
-    "build": "tsc",
+    "build": "tsc && npx mikro-orm-esm cache:generate --combined",
+    "start": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/server.ts",
     "migrate:create": "mikro-orm migration:create"
   },
   "keywords": [],
@@ -46,9 +47,6 @@
     "vitest": "^1.6.0"
   },
   "mikro-orm": {
-    "useTsNode": true,
-    "configPaths": [
-      "./dist/mikro-orm.config.js"
-    ]
+    "useTsNode": true
   }
 }

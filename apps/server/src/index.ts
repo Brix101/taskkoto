@@ -1,4 +1,4 @@
-import { startServer } from "@/app";
+import { startServer } from "./app.js";
 
 startServer().then((server) => {
   //////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ startServer().then((server) => {
     process.on(type, () => {
       console.log(`${type} signal received.`);
       console.log("Closing http server.");
-      server.close((err) => {
+      server.close((err: unknown) => {
         console.log("Http server closed.");
         process.exit(err ? 1 : 0);
       });
