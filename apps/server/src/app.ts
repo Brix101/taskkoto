@@ -44,6 +44,9 @@ export const buildApp = async (app: ReturnType<typeof express>) => {
             if (error instanceof NotFoundError) {
               throw new GraphQLError(`User not found with id '${id}'.`, {
                 originalError: error,
+                extensions: {
+                  code: "NOT_FOUND_ERROR",
+                },
               });
             } else {
               log.error(error);
