@@ -9,24 +9,7 @@ export type GraphQLContext = YogaInitialContext & {
   em: EntityManager<IDatabaseDriver<Connection>>;
 };
 
-const users = [
-  {
-    id: "1",
-    login: "Laurin",
-  },
-  {
-    id: "2",
-    login: "Saihaj",
-  },
-  {
-    id: "3",
-    login: "Dotan",
-  },
-];
-
-const app = express();
-
-export const startServer = async () => {
+export const buildApp = async (app: ReturnType<typeof express>) => {
   const db = await initORM();
   const migrator = db.orm.getMigrator();
   const migrations = await migrator.getPendingMigrations();
@@ -45,13 +28,7 @@ export const startServer = async () => {
     context: (ctx) => ({ ...ctx, em: db.em }),
   });
 
-  // Bind GraphQL Yoga to the graphql endpoint to avoid rendering the playground on any path
   app.use(yoga.graphqlEndpoint, yoga);
 
-  const port = process.env.PORT || 5000;
-  return app.listen(port, () => {
-    console.log(
-      `server started on http://localhost:${port}${yoga.graphqlEndpoint}`
-    );
-  });
+  return yoga.graphqlEndpoint;
 };
