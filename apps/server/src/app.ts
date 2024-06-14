@@ -3,6 +3,7 @@ import express from "express";
 import { YogaInitialContext, createYoga } from "graphql-yoga";
 import { buildSchema } from "type-graphql";
 import { initORM } from "./db.js";
+import graphqlTypeDefs from "./lib/graphql/typeDefs.js";
 import { UsersResolver } from "./modules/users/users.resolver.js";
 
 export type GraphQLContext = YogaInitialContext & {
@@ -16,6 +17,9 @@ export const buildApp = async (app: ReturnType<typeof express>) => {
   if (migrations && migrations.length > 0) {
     await migrator.up();
   }
+
+  const typetest = graphqlTypeDefs;
+  console.log(typetest);
 
   const schema = await buildSchema({
     resolvers: [UsersResolver],

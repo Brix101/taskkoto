@@ -11,7 +11,6 @@
   },
   "keywords": [],
   "dependencies": {
-    "@graphql-tools/schema": "^10.0.4",
     "@mikro-orm/core": "^6.2.9",
     "@mikro-orm/migrations": "^6.2.9",
     "@mikro-orm/postgresql": "^6.2.9",
@@ -32,6 +31,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.4.0",
+    "@graphql-tools/load-files": "^7.0.0",
+    "@graphql-tools/merge": "^9.0.4",
+    "@graphql-tools/schema": "^10.0.4",
     "@mikro-orm/cli": "^6.2.9",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
