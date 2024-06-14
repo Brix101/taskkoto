@@ -1,6 +1,6 @@
 import winston from "winston";
 
-const logger = winston.createLogger({
+const log = winston.createLogger({
   level: "info",
   format: winston.format.json(),
   defaultMeta: { service: "taskkoto" },
@@ -11,7 +11,7 @@ const logger = winston.createLogger({
 });
 
 if (process.env.NODE_ENV !== "production") {
-  logger.add(
+  log.add(
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
@@ -21,4 +21,4 @@ if (process.env.NODE_ENV !== "production") {
   );
 }
 
-export { logger };
+export { log };
