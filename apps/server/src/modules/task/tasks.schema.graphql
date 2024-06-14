@@ -14,13 +14,12 @@ enum TaskStatus {
   DONE
 }
 
-extend type Query {
+type Query {
   task(id: ID!): Task
   tasks: [Task]
-  tasksByUser(userId: ID!): [Task]
 }
 
-extend type Mutation {
+type Mutation {
   createTask(
     title: String!
     description: String

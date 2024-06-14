@@ -81,7 +81,6 @@ export type Query = {
   __typename?: 'Query';
   task?: Maybe<Task>;
   tasks?: Maybe<Array<Maybe<Task>>>;
-  tasksByUser?: Maybe<Array<Maybe<Task>>>;
   user?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
 };
@@ -89,11 +88,6 @@ export type Query = {
 
 export type QueryTaskArgs = {
   id: Scalars['ID']['input'];
-};
-
-
-export type QueryTasksByUserArgs = {
-  userId: Scalars['ID']['input'];
 };
 
 
@@ -249,7 +243,6 @@ export type NodeResolvers<ContextType = any, ParentType extends ResolversParentT
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   task?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTaskArgs, 'id'>>;
   tasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType>;
-  tasksByUser?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType, RequireFields<QueryTasksByUserArgs, 'userId'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
 };

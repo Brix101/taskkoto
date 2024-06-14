@@ -4,8 +4,8 @@ import {
 } from "@mikro-orm/core";
 import { GraphQLError } from "graphql";
 import { createSchema } from "graphql-yoga";
-import { Resolvers } from "../../generated/resolvers-types";
 import { UserEntity } from "../../modules/users/entities/user.entity";
+import { Resolvers } from "../../types/resolvers";
 import { log } from "../logger";
 import typeDefs from "./type-defs";
 import { GraphQLContext } from "./yoga";
