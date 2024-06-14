@@ -17,6 +17,7 @@ enum TaskStatus {
 extend type Query {
   task(id: ID!): Task
   tasks: [Task]
+  tasksByUser(userId: ID!): [Task]
 }
 
 extend type Mutation {
