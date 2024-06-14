@@ -5,7 +5,7 @@ import {
   MikroORM,
 } from "@mikro-orm/core";
 import { Options } from "@mikro-orm/postgresql";
-import config from "./mikro-orm.config";
+import config from "../mikro-orm.config";
 
 export interface DBServices {
   orm: MikroORM;

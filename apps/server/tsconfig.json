@@ -12,7 +12,7 @@
     "declaration": true,
     "experimentalDecorators": true
   },
-  "include": ["./src/**/*.ts", "codegen.ts"],
+  "include": ["./src/**/*.ts", "codegen.ts", "mikro-orm.config.ts"],
   "ts-node": {
     "esm": true,
     "preferTsExts": true,
