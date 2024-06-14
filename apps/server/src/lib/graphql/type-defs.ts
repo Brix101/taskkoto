@@ -3,11 +3,11 @@ import { mergeTypeDefs } from "@graphql-tools/merge";
 import fs from "fs";
 import { print } from "graphql";
 
-const loadedFiles = loadFilesSync(`${process.cwd()}/src/**/*.graphql`);
+const loadedFiles = loadFilesSync(`${process.cwd()}/src/modules/**/*.graphql`);
 
 const typeDefs = mergeTypeDefs(loadedFiles);
 const printedTypeDefs = print(typeDefs);
 
-fs.writeFileSync("src/schema.graphql", printedTypeDefs);
+fs.writeFileSync("src/generated/schema.graphql", printedTypeDefs);
 
 export default typeDefs;
