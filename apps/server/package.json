@@ -4,12 +4,13 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "dev": "tsx watch ./src/index.ts",
+    "dev": "concurrently  \"tsx watch ./src/index.ts\"  \"pnpm generate --watch\"",
     "build": "tsc && npx mikro-orm-esm cache:generate --combined",
     "start": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/server.ts",
     "test": "vitest",
     "migrate:create": "mikro-orm-esm migration:create",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen",
+    "prestart": "yarn generate"
   },
   "keywords": [],
   "dependencies": {
@@ -43,6 +44,7 @@
     "@typescript-eslint/parser": "^7.13.0",
     "@typescript-eslint/type-utils": "^7.13.0",
     "@typescript-eslint/utils": "^7.13.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",

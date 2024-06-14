@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { UserEntity } from './../modules/users/entities/user.entity';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -6,6 +7,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -190,7 +192,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
-  Node: ( Task ) | ( User );
+  Node: ( Omit<Task, 'assignedTo'> & { assignedTo?: Maybe<_RefType['User']> } ) | ( UserEntity );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -202,9 +204,9 @@ export type ResolversTypes = {
   Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  Task: ResolverTypeWrapper<Task>;
+  Task: ResolverTypeWrapper<Omit<Task, 'assignedTo'> & { assignedTo?: Maybe<ResolversTypes['User']> }>;
   TaskStatus: TaskStatus;
-  User: ResolverTypeWrapper<User>;
+  User: ResolverTypeWrapper<UserEntity>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -216,8 +218,8 @@ export type ResolversParentTypes = {
   Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
   Query: {};
   String: Scalars['String']['output'];
-  Task: Task;
-  User: User;
+  Task: Omit<Task, 'assignedTo'> & { assignedTo?: Maybe<ResolversParentTypes['User']> };
+  User: UserEntity;
 };
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
