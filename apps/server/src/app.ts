@@ -17,6 +17,8 @@ export type GraphQLContext = YogaInitialContext & {
   em: EntityManager<IDatabaseDriver<Connection>>;
 };
 
+export type ServerContext = {};
+
 export const buildApp = async (app: ReturnType<typeof express>) => {
   const db = await initORM();
   const migrator = db.orm.getMigrator();
@@ -80,7 +82,7 @@ export const buildApp = async (app: ReturnType<typeof express>) => {
     },
   });
 
-  const yoga = createYoga<{}, GraphQLContext>({
+  const yoga = createYoga<ServerContext, GraphQLContext>({
     schema,
     graphiql: true,
     context: (ctx) => ({ ...ctx, em: db.em }),
