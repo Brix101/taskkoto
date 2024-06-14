@@ -13,5 +13,5 @@ export class UserEntity extends BaseEntity {
   password!: string;
 
   @Property({ type: "text", nullable: true })
-  bio?: string;
+  bio?: string | null;
 }
