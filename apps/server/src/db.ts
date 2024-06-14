@@ -7,12 +7,12 @@ import {
 import { Options } from "@mikro-orm/postgresql";
 import config from "./mikro-orm.config";
 
-export interface Services {
+export interface DBServices {
   orm: MikroORM;
   em: EntityManager<IDatabaseDriver<Connection>>;
 }
 
-let cache: Services;
+let cache: DBServices;
 
 export async function initORM(options?: Options) {
   if (cache) {
@@ -27,5 +27,5 @@ export async function initORM(options?: Options) {
   return (cache = {
     orm,
     em: orm.em,
-  });
+  } as DBServices);
 }
