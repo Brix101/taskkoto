@@ -82,7 +82,6 @@ export const buildApp = async (app: ReturnType<typeof express>) => {
 
   const yoga = createYoga<{}, GraphQLContext>({
     schema,
-    logging: true,
     graphiql: true,
     context: (ctx) => ({ ...ctx, em: db.em }),
   });
