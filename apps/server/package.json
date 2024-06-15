@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsx watch -r tsconfig-paths/register ./src/index.ts",
     "build": "tsc && npx mikro-orm-esm cache:generate --combined",
-    "start": "node --no-warnings=ExperimentalWarning --loader ts-node/esm -r tsconfig-paths/register ./src/index.ts",
+    "start": "node --no-warnings=ExperimentalWarning --loader ts-node/esm  -r tsconfig-paths/register ./src/index.ts",
     "test": "vitest",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{js,ts,graphql}\"",
