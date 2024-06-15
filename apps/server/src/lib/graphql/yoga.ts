@@ -1,7 +1,7 @@
+import { DBServices } from "@/db.js";
 import { Connection, EntityManager, IDatabaseDriver } from "@mikro-orm/core";
 import { YogaInitialContext, createYoga } from "graphql-yoga";
-import { DBServices } from "../../db";
-import schema from "./schema";
+import schema from "./schema.js";
 
 export type GraphQLContext = YogaInitialContext & {
   em: EntityManager<IDatabaseDriver<Connection>>;

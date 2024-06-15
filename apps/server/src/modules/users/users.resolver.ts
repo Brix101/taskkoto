@@ -1,12 +1,12 @@
+import { GraphQLContext } from "@/lib/graphql/yoga.js";
+import { log } from "@/lib/logger.js";
+import { Resolvers } from "@/types/resolvers.generated.js";
 import {
   NotFoundError,
   UniqueConstraintViolationException,
 } from "@mikro-orm/core";
 import { GraphQLError } from "graphql";
-import { GraphQLContext } from "../../lib/graphql/yoga";
-import { log } from "../../lib/logger";
-import { UserEntity } from "../../modules/users/entities/user.entity";
-import { Resolvers } from "../../types/resolvers.generated";
+import { UserEntity } from "./entities/user.entity.js";
 
 const userResolvers: Resolvers<GraphQLContext> = {
   Query: {
@@ -44,7 +44,14 @@ const userResolvers: Resolvers<GraphQLContext> = {
       try {
         const em = ctx.em.fork();
         const userRepo = em.getRepository(UserEntity);
-        const user = userRepo.create(args);
+        const user = userRepo.create({
+          fullName: args.fullName,
+          email: args.email,
+          password: args.password,
+          bio: args.bio,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
         // Persist the user to the database
         await em.flush();
 
