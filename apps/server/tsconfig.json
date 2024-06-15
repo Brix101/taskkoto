@@ -29,6 +29,9 @@
   "exclude": ["node_modules", "dist"],
   "ts-node": {
     "esm": true,
-    "transpileOnly": true
+    "transpileOnly": true,
+    "compilerOptions": {
+      "module": "NodeNext"
+    }
   }
 }

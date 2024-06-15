@@ -1,6 +1,6 @@
-import express from "express";
-import { buildApp } from "./app.js";
-import { log } from "./lib/logger.js";
+import express from 'express';
+import { buildApp } from './app.js';
+import { log } from './lib/logger.js';
 
 const app = express();
 
@@ -13,8 +13,8 @@ const server = app.listen(port, () => {
 });
 
 //////////////////////////////////////////////////////////////////////
-const signals = ["SIGTERM", "SIGINT", "SIGHUP", "SIGBREAK"];
-const errorTypes = ["unhandledRejection", "uncaughtException"];
+const signals = ['SIGTERM', 'SIGINT', 'SIGHUP', 'SIGBREAK'];
+const errorTypes = ['unhandledRejection', 'uncaughtException'];
 
 errorTypes.forEach((type) => {
   process.on(type, async (error) => {
@@ -31,9 +31,9 @@ errorTypes.forEach((type) => {
 signals.forEach((type) => {
   process.on(type, () => {
     log.info(`${type} signal received.`);
-    log.info("Closing http server.");
+    log.info('Closing http server.');
     server.close((err: unknown) => {
-      log.info("Http server closed.");
+      log.info('Http server closed.');
       process.exit(err ? 1 : 0);
     });
   });

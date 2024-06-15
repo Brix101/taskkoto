@@ -2,12 +2,13 @@
   "name": "server",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.ts",
   "scripts": {
     "dev": "tsx watch -r tsconfig-paths/register ./src/index.ts",
     "build": "tsc && npx mikro-orm-esm cache:generate --combined",
-    "start": "node --no-warnings=ExperimentalWarning --loader ts-node/esm ./src/index.ts",
+    "start": "node --no-warnings=ExperimentalWarning --loader ts-node/esm -r tsconfig-paths/register ./src/index.ts",
     "test": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.{js,ts,graphql}\"",
     "generate": "graphql-codegen",
     "orm:debug": "mikro-orm-esm debug",
     "orm:migrate": "mikro-orm-esm migration:create"

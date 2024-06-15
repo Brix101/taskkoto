@@ -1,12 +1,9 @@
-import { GraphQLContext } from "@/lib/graphql/yoga.js";
-import { log } from "@/lib/logger.js";
-import { Resolvers } from "@/types/resolvers.generated.js";
-import {
-  NotFoundError,
-  UniqueConstraintViolationException,
-} from "@mikro-orm/core";
-import { GraphQLError } from "graphql";
-import { UserEntity } from "./entities/user.entity.js";
+import { GraphQLContext } from '@/lib/graphql/yoga.js';
+import { log } from '@/lib/logger.js';
+import { Resolvers } from '@/types/resolvers.generated.js';
+import { NotFoundError, UniqueConstraintViolationException } from '@mikro-orm/core';
+import { GraphQLError } from 'graphql';
+import { UserEntity } from './entities/user.entity.js';
 
 const userResolvers: Resolvers<GraphQLContext> = {
   Query: {
@@ -24,7 +21,7 @@ const userResolvers: Resolvers<GraphQLContext> = {
           throw new GraphQLError(`User not found with id '${id}'.`, {
             originalError: error,
             extensions: {
-              code: "NOT_FOUND_ERROR",
+              code: 'NOT_FOUND_ERROR',
             },
           });
         } else {
@@ -58,7 +55,7 @@ const userResolvers: Resolvers<GraphQLContext> = {
         return user;
       } catch (error: any) {
         if (error instanceof UniqueConstraintViolationException) {
-          throw new GraphQLError("A user with this email already exists.", {
+          throw new GraphQLError('A user with this email already exists.', {
             originalError: error,
           });
         } else {

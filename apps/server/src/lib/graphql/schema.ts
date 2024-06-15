@@ -1,7 +1,7 @@
-import { createSchema } from "graphql-yoga";
-import resolvers from "./resolvers.js";
-import typeDefs from "./type-defs.js";
-import { GraphQLContext } from "./yoga.js";
+import { createSchema } from 'graphql-yoga';
+import resolvers from './resolvers.js';
+import typeDefs from './type-defs.js';
+import { GraphQLContext } from './yoga.js';
 
 const schema = createSchema<GraphQLContext>({
   typeDefs,
