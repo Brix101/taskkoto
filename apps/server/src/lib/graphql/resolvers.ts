@@ -4,6 +4,6 @@ import path from 'path';
 
 const resolversArray = loadFilesSync(path.join(process.cwd(), './**/*.resolver.*'));
 
-const resolvers: any = mergeResolvers(resolversArray);
+const resolvers = mergeResolvers(resolversArray);
 
 export default resolvers;
