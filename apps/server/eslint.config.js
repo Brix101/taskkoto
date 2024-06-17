@@ -33,7 +33,7 @@ const customConfig = [
     },
   },
   {
-    files: ['src/**/*.error.ts', 'src/**/*.handler.ts', 'src/**/*.factory.ts'],
+    files: ['src/**/*.error.ts', 'src/**/*.handler.ts', 'src/**/*.factory.ts', 'src/**/yoga.ts'],
 
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
@@ -45,7 +45,7 @@ export default tseslint.config(
   // Global ignores
   // https://eslint.org/docs/latest/use/configure/configuration-files#globally-ignoring-files-with-ignores
   {
-    ignores: ['**/node_modules', 'dist', '.husky', 'src/db/**/*.d.ts', '**/*.generated.ts'],
+    ignores: ['**/node_modules', 'dist', 'src/db/**/*.d.ts', '**/*.generated.ts'],
   },
   {
     languageOptions: {
