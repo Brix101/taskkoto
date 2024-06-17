@@ -1,8 +1,8 @@
 import { Entity, Property } from '@mikro-orm/core';
-import { BaseEntity } from '../../common/base.entity.js';
+import { CommonEntity } from '../../common/common.entity.js';
 
 @Entity({ tableName: 'users' })
-export class UserEntity extends BaseEntity {
+export class UserEntity extends CommonEntity {
   @Property()
   fullName!: string;
 

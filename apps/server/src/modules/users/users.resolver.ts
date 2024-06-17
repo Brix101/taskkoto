@@ -39,18 +39,8 @@ const userResolvers: Resolvers<GraphQLContext> = {
   Mutation: {
     createUser: async (_root, args, ctx) => {
       try {
-        const em = ctx.em.fork();
-        const userRepo = em.getRepository(UserEntity);
-        const user = userRepo.create({
-          fullName: args.fullName,
-          email: args.email,
-          password: args.password,
-          bio: args.bio,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        });
-        // Persist the user to the database
-        await em.flush();
+        const user = new UserEntity(args);
+        await ctx.em.persist(user).flush();
 
         return user;
       } catch (error: any) {

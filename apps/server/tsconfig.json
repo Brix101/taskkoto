@@ -25,7 +25,7 @@
     "declaration": true,
     "experimentalDecorators": true
   },
-  "include": ["./src/**/*.ts", "codegen.ts", "mikro-orm.config.ts"],
+  "include": ["./src/**/*.ts", "codegen.ts", "mikro-orm.config.ts", "src/modules/common/common.entity.ts"],
   "exclude": ["node_modules", "dist"],
   "ts-node": {
     "esm": true,
