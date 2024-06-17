@@ -16,7 +16,7 @@ const userResolvers: Resolvers<GraphQLContext> = {
         });
 
         return user;
-      } catch (error: any) {
+      } catch (error) {
         if (error instanceof NotFoundError) {
           throw new GraphQLError(`User not found with id '${id}'.`, {
             originalError: error,
@@ -31,7 +31,12 @@ const userResolvers: Resolvers<GraphQLContext> = {
       }
     },
     users: async (_root, _args, ctx) => {
-      return ctx.em.getRepository(UserEntity).findAll();
+      try {
+        return await ctx.em.getRepository(UserEntity).findAll();
+      } catch (error) {
+        log.error(error);
+        throw new GraphQLError(error.message);
+      }
     },
   },
   Mutation: {
@@ -41,7 +46,7 @@ const userResolvers: Resolvers<GraphQLContext> = {
         await ctx.em.persist(user).flush();
 
         return user;
-      } catch (error: any) {
+      } catch (error) {
         if (error instanceof UniqueConstraintViolationException) {
           throw new GraphQLError('A user with this email already exists.', {
             originalError: error,

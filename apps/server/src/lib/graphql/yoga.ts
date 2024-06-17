@@ -5,15 +5,13 @@ import typeDefs from './type-defs.js';
 
 export type GraphQLContext = YogaInitialContext & DBServices;
 
-export type ServerContext = {};
-
-const schema = createSchema<GraphQLContext>({
+const schema = createSchema<DBServices>({
   typeDefs,
   resolvers,
 });
 
 export function initializeYoga(dbServices: DBServices) {
-  return createYoga<ServerContext, GraphQLContext>({
+  return createYoga<GraphQLContext>({
     schema,
     graphiql: true,
     context: (ctx) => ({ ...ctx, ...dbServices }),
