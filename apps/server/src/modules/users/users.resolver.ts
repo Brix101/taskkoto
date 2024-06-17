@@ -31,9 +31,7 @@ const userResolvers: Resolvers<GraphQLContext> = {
       }
     },
     users: async (_root, _args, ctx) => {
-      const userRepo = ctx.em.fork().getRepository(UserEntity);
-
-      return userRepo.findAll();
+      return ctx.em.getRepository(UserEntity).findAll();
     },
   },
   Mutation: {
