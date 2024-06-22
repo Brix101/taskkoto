@@ -45,14 +45,13 @@ function Sample() {
     queryFn: async () => request("http://localhost:5000/graphql", query),
   });
 
-  console.log(data);
   return (
     <>
       <h1 className="bg-red-300 p-10">Hello world</h1>
       <ul>
-        {data?.tasks.map((task) => (
-          <li key={task.id}>
-            {task.title}--{task.id}
+        {data?.tasks?.map((task) => (
+          <li key={task?.id}>
+            {task?.title}--{task?.id}
           </li>
         ))}
       </ul>
