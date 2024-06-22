@@ -40,10 +40,16 @@ const userResolvers: Resolvers<GraphQLContext> = {
     },
   },
   Mutation: {
-    createUser: async (_root, args, ctx) => {
+    createUser: async (_root, { input }, ctx) => {
       try {
-        const user = new UserEntity(args);
-        await ctx.em.persist(user).flush();
+        if (!input) {
+          throw new GraphQLError('Add input', {});
+        }
+        const em = ctx.em.fork();
+
+        const userInput = new UserEntity(input);
+        const user = em.create(UserEntity, userInput);
+        await em.persistAndFlush(user);
 
         return user;
       } catch (error) {
@@ -52,7 +58,7 @@ const userResolvers: Resolvers<GraphQLContext> = {
             originalError: error,
           });
         } else {
-          log.error(error);
+          log.error(error.message);
           throw new GraphQLError(error.message);
         }
       }

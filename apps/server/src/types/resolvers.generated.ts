@@ -19,6 +19,21 @@ export type Scalars = {
   Date: { input: any; output: any; }
 };
 
+export type CreateTaskInput = {
+  assigneeId?: InputMaybe<Scalars['ID']['input']>;
+  creatorId: Scalars['ID']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  status: TaskStatus;
+  title: Scalars['String']['input'];
+};
+
+export type CreateUserInput = {
+  bio?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  fullName: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createTask?: Maybe<Task>;
@@ -31,18 +46,12 @@ export type Mutation = {
 
 
 export type MutationCreateTaskArgs = {
-  assignedTo?: InputMaybe<Scalars['ID']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  status: TaskStatus;
-  title: Scalars['String']['input'];
+  input?: InputMaybe<CreateTaskInput>;
 };
 
 
 export type MutationCreateUserArgs = {
-  bio?: InputMaybe<Scalars['String']['input']>;
-  email: Scalars['String']['input'];
-  fullName: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+  input?: InputMaybe<CreateUserInput>;
 };
 
 
@@ -57,20 +66,14 @@ export type MutationDeleteUserArgs = {
 
 
 export type MutationUpdateTaskArgs = {
-  assignedTo?: InputMaybe<Scalars['ID']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
-  status?: InputMaybe<TaskStatus>;
-  title?: InputMaybe<Scalars['String']['input']>;
+  input?: InputMaybe<UpdateTaskInput>;
 };
 
 
 export type MutationUpdateUserArgs = {
-  bio?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  fullName?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
-  password?: InputMaybe<Scalars['String']['input']>;
+  input?: InputMaybe<UpdateUserInput>;
 };
 
 export type Node = {
@@ -97,7 +100,8 @@ export type QueryUserArgs = {
 
 export type Task = Node & {
   __typename?: 'Task';
-  assignedTo?: Maybe<User>;
+  assignee?: Maybe<User>;
+  createBy?: Maybe<User>;
   createdAt: Scalars['Date']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
@@ -111,6 +115,20 @@ export enum TaskStatus {
   InProgress = 'IN_PROGRESS',
   Todo = 'TODO'
 }
+
+export type UpdateTaskInput = {
+  assigneeId?: InputMaybe<Scalars['ID']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<TaskStatus>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateUserInput = {
+  bio?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  fullName?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+};
 
 export type User = Node & {
   __typename?: 'User';
@@ -192,33 +210,41 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
-  Node: ( Omit<Task, 'assignedTo'> & { assignedTo?: Maybe<_RefType['User']> } ) | ( UserEntity );
+  Node: ( Omit<Task, 'assignee' | 'createBy'> & { assignee?: Maybe<_RefType['User']>, createBy?: Maybe<_RefType['User']> } ) | ( UserEntity );
 };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateTaskInput: CreateTaskInput;
+  CreateUserInput: CreateUserInput;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  Task: ResolverTypeWrapper<Omit<Task, 'assignedTo'> & { assignedTo?: Maybe<ResolversTypes['User']> }>;
+  Task: ResolverTypeWrapper<Omit<Task, 'assignee' | 'createBy'> & { assignee?: Maybe<ResolversTypes['User']>, createBy?: Maybe<ResolversTypes['User']> }>;
   TaskStatus: TaskStatus;
+  UpdateTaskInput: UpdateTaskInput;
+  UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<UserEntity>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
+  CreateTaskInput: CreateTaskInput;
+  CreateUserInput: CreateUserInput;
   Date: Scalars['Date']['output'];
   ID: Scalars['ID']['output'];
   Mutation: {};
   Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
   Query: {};
   String: Scalars['String']['output'];
-  Task: Omit<Task, 'assignedTo'> & { assignedTo?: Maybe<ResolversParentTypes['User']> };
+  Task: Omit<Task, 'assignee' | 'createBy'> & { assignee?: Maybe<ResolversParentTypes['User']>, createBy?: Maybe<ResolversParentTypes['User']> };
+  UpdateTaskInput: UpdateTaskInput;
+  UpdateUserInput: UpdateUserInput;
   User: UserEntity;
 };
 
@@ -227,8 +253,8 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'status' | 'title'>>;
-  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'fullName' | 'password'>>;
+  createTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, Partial<MutationCreateTaskArgs>>;
+  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<MutationCreateUserArgs>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'id'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   updateTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'id'>>;
@@ -248,7 +274,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
-  assignedTo?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  assignee?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  createBy?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;

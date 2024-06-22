@@ -21,12 +21,12 @@ type Query {
 }
 
 type Mutation {
-  createTask(input: TaskInput): Task
-  updateTask(id: ID!, input: TaskUpdateInput): Task
+  createTask(input: CreateTaskInput): Task
+  updateTask(id: ID!, input: UpdateTaskInput): Task
   deleteTask(id: ID!): Task
 }
 
-input TaskInput {
+input CreateTaskInput {
   title: String!
   description: String
   status: TaskStatus!
@@ -34,7 +34,7 @@ input TaskInput {
   creatorId: ID!
 }
 
-input TaskUpdateInput {
+input UpdateTaskInput {
   title: String
   description: String
   status: TaskStatus

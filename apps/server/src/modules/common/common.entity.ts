@@ -9,9 +9,4 @@ export abstract class CommonEntity extends BaseEntity {
 
   @Property({ onUpdate: () => new Date() })
   public updatedAt: Date = new Date();
-
-  constructor(body = {}) {
-    super();
-    this.assign(body);
-  }
 }
