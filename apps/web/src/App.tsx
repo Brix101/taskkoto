@@ -2,6 +2,7 @@ import "@/assets/globals.css";
 import {
   QueryClient,
   QueryClientProvider,
+  useMutation,
   useQuery,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -39,11 +40,32 @@ const query = graphql(`
   }
 `);
 
+const mutation = graphql(`
+  mutation createTask($input: CreateTaskInput) {
+    createTask(input: $input) {
+      id
+      createdAt
+      updatedAt
+      title
+      description
+      status
+    }
+  }
+`);
+
 function Sample() {
   const { data } = useQuery({
     queryKey: ["tasks"],
     queryFn: async () => request("http://localhost:5000/graphql", query),
   });
+
+  const { mutate } = useMutation({
+    mutationKey: ["createTask"],
+    mutationFn: async (variables) =>
+      request("http://localhost:5000/graphql", mutation, variables),
+  });
+
+  function handleMutate() {}
 
   return (
     <>
