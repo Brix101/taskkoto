@@ -21,6 +21,7 @@
     "@tanstack/react-query": "^5.45.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "gql.tada": "^1.7.6",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -32,6 +33,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@0no-co/graphqlsp": "^1.12.8",
+    "@tanstack/eslint-plugin-query": "^5.43.1",
+    "@tanstack/react-query-devtools": "^5.45.1",
     "@types/node": "^20.14.2",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
