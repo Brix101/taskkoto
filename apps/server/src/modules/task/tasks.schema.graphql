@@ -5,7 +5,8 @@ type Task implements Node {
   title: String!
   description: String
   status: TaskStatus!
-  assignedTo: User
+  assignee: User
+  createBy: User
 }
 
 enum TaskStatus {
@@ -20,7 +21,22 @@ type Query {
 }
 
 type Mutation {
-  createTask(title: String!, description: String, status: TaskStatus!, assignedTo: ID): Task
-  updateTask(id: ID!, title: String, description: String, status: TaskStatus, assignedTo: ID): Task
+  createTask(input: TaskInput): Task
+  updateTask(id: ID!, input: TaskUpdateInput): Task
   deleteTask(id: ID!): Task
+}
+
+input TaskInput {
+  title: String!
+  description: String
+  status: TaskStatus!
+  assigneeId: ID
+  creatorId: ID!
+}
+
+input TaskUpdateInput {
+  title: String
+  description: String
+  status: TaskStatus
+  assigneeId: ID
 }
