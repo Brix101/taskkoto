@@ -3,22 +3,22 @@ import { log } from '@/lib/logger.js';
 import { Resolvers } from '@/types/resolvers.generated.js';
 import { NotFoundError, UniqueConstraintViolationException } from '@mikro-orm/core';
 import { GraphQLError } from 'graphql';
-import { UserEntity } from './entities/user.entity.js';
+import { TaskEntity } from './entities/task.entity.js';
 
-const userResolvers: Resolvers<GraphQLContext> = {
+const taskResolvers: Resolvers<GraphQLContext> = {
   Query: {
-    user: async (_root, args, ctx) => {
+    task: async (_root, args, ctx) => {
       const id = args.id;
       try {
-        const userRepo = ctx.em.getRepository(UserEntity);
-        const user = await userRepo.findOneOrFail({
+        const taskRepo = ctx.em.getRepository(TaskEntity);
+        const task = await taskRepo.findOneOrFail({
           id: Number(id),
         });
 
-        return user;
+        return task;
       } catch (error) {
         if (error instanceof NotFoundError) {
-          throw new GraphQLError(`User not found with id '${id}'.`, {
+          throw new GraphQLError(`Task not found with id '${id}'.`, {
             originalError: error,
             extensions: {
               code: 'NOT_FOUND_ERROR',
@@ -30,9 +30,9 @@ const userResolvers: Resolvers<GraphQLContext> = {
         }
       }
     },
-    users: async (_root, _args, ctx) => {
+    tasks: async (_root, _args, ctx) => {
       try {
-        return await ctx.em.getRepository(UserEntity).findAll();
+        return await ctx.em.getRepository(TaskEntity).findAll();
       } catch (error) {
         log.error(error);
         throw new GraphQLError(error.message);
@@ -40,20 +40,20 @@ const userResolvers: Resolvers<GraphQLContext> = {
     },
   },
   Mutation: {
-    createUser: async (_root, { input }, ctx) => {
+    createTask: async (_root, { input }, ctx) => {
       try {
         if (!input) {
           throw new GraphQLError('Add input', {});
         }
 
-        const userInput = new UserEntity(input);
-        const user = ctx.em.create(UserEntity, userInput);
-        await ctx.em.persistAndFlush(user);
+        const taskInput = new TaskEntity(input);
+        const task = ctx.em.create(TaskEntity, taskInput);
+        await ctx.em.persistAndFlush(task);
 
-        return user;
+        return task;
       } catch (error) {
         if (error instanceof UniqueConstraintViolationException) {
-          throw new GraphQLError('A user with this email already exists.', {
+          throw new GraphQLError('A task with this email already exists.', {
             originalError: error,
           });
         } else {
@@ -65,4 +65,4 @@ const userResolvers: Resolvers<GraphQLContext> = {
   },
 };
 
-export default userResolvers;
+export default taskResolvers;

@@ -1,6 +1,7 @@
 import { Property, Enum, ManyToOne, Entity } from '@mikro-orm/core';
 import { CommonEntity } from '../../common/common.entity.js';
 import { UserEntity } from '../../users/entities/user.entity.js';
+import { CreateTaskInput } from '../../../types/resolvers.generated.js';
 
 export enum TaskStatus {
   TODO = 'TODO',
@@ -24,4 +25,13 @@ export class TaskEntity extends CommonEntity {
 
   @ManyToOne(() => UserEntity)
   creator!: UserEntity;
+
+  constructor(input: CreateTaskInput) {
+    super();
+    this.title = input.title;
+    this.description = input.description ?? '';
+    this.status = input.status;
+    this.assignee = input.assigneeId as unknown as UserEntity;
+    this.creator = input.creatorId as unknown as UserEntity;
+  }
 }
