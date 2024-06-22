@@ -7,15 +7,16 @@ import typeDefs from './type-defs.js';
 
 const userDataloader = new Dataloader(getUserByIds);
 
-type ServicesLoader = DBServices & {
+type DataLoaders = {
   userDataloader: typeof userDataloader;
+  // other data loaders go here
 };
 
-export type GraphQLContext = YogaInitialContext & ServicesLoader;
-
 export type ServerContext = Record<string, any>;
+type SchemaContext = ServerContext & DBServices & DataLoaders;
+export type GraphQLContext = YogaInitialContext & SchemaContext;
 
-const schema = createSchema<ServicesLoader>({
+const schema = createSchema<SchemaContext>({
   typeDefs,
   resolvers,
 });

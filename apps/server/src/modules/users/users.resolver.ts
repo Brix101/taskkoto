@@ -7,7 +7,7 @@ import { UserEntity } from './entities/user.entity.js';
 
 const userResolvers: Resolvers<GraphQLContext> = {
   Query: {
-    user: async (_root, { id }, ctx) => {
+    user: async (_parent, { id }, ctx) => {
       try {
         const user = await ctx.userDataloader.load(Number(id));
         return user;
@@ -25,7 +25,7 @@ const userResolvers: Resolvers<GraphQLContext> = {
         }
       }
     },
-    users: async (_root, _args, ctx) => {
+    users: async (_parent, _args, ctx) => {
       try {
         return await ctx.em.getRepository(UserEntity).findAll();
       } catch (error) {
@@ -35,7 +35,7 @@ const userResolvers: Resolvers<GraphQLContext> = {
     },
   },
   Mutation: {
-    createUser: async (_root, { input }, ctx) => {
+    createUser: async (_parent, { input }, ctx) => {
       try {
         if (!input) {
           throw new GraphQLError('Add input', {});

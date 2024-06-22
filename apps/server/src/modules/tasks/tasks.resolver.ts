@@ -7,7 +7,7 @@ import { TaskEntity } from './entities/task.entity.js';
 
 const taskResolvers: Resolvers<GraphQLContext> = {
   Query: {
-    task: async (_root, args, ctx) => {
+    task: async (_parent, args, ctx) => {
       const id = args.id;
       try {
         const taskRepo = ctx.em.getRepository(TaskEntity);
@@ -35,7 +35,7 @@ const taskResolvers: Resolvers<GraphQLContext> = {
         }
       }
     },
-    tasks: async (_root, _args, ctx, info) => {
+    tasks: async (_parent, _args, ctx, info) => {
       try {
         return await ctx.em.getRepository(TaskEntity).findAll();
       } catch (error) {
@@ -45,7 +45,7 @@ const taskResolvers: Resolvers<GraphQLContext> = {
     },
   },
   Mutation: {
-    createTask: async (_root, { input }, ctx) => {
+    createTask: async (_parent, { input }, ctx) => {
       try {
         if (!input) {
           throw new GraphQLError('Add input', {});
