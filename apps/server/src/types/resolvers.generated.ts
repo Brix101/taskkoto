@@ -23,7 +23,6 @@ export type Scalars = {
 
 export type CreateTaskInput = {
   assigneeId?: InputMaybe<Scalars['ID']['input']>;
-  creatorId: Scalars['ID']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   status: TaskStatus;
   title: Scalars['String']['input'];
@@ -103,8 +102,8 @@ export type QueryUserArgs = {
 export type Task = Node & {
   __typename?: 'Task';
   assignee?: Maybe<User>;
-  createBy?: Maybe<User>;
   createdAt: Scalars['Date']['output'];
+  createdBy?: Maybe<User>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   status: TaskStatus;
@@ -273,8 +272,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
   assignee?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  createBy?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  createdBy?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['TaskStatus'], ParentType, ContextType>;

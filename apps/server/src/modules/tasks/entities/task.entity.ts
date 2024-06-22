@@ -24,7 +24,7 @@ export class TaskEntity extends CommonEntity {
   assignee?: UserEntity;
 
   @ManyToOne(() => UserEntity)
-  creator!: UserEntity;
+  createdBy!: UserEntity;
 
   constructor(input: CreateTaskInput) {
     super();
@@ -32,6 +32,6 @@ export class TaskEntity extends CommonEntity {
     this.description = input.description ?? '';
     this.status = input.status;
     this.assignee = input.assigneeId as unknown as UserEntity;
-    this.creator = input.creatorId as unknown as UserEntity;
+    this.createdBy = input.creatorId as unknown as UserEntity;
   }
 }

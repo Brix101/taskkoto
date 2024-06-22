@@ -7,8 +7,7 @@ import { UserEntity } from './entities/user.entity.js';
 
 const userResolvers: Resolvers<GraphQLContext> = {
   Query: {
-    user: async (_root, args, ctx) => {
-      const id = args.id;
+    user: async (_root, { id }, ctx) => {
       try {
         const userRepo = ctx.em.getRepository(UserEntity);
         const user = await userRepo.findOneOrFail({
@@ -62,6 +61,9 @@ const userResolvers: Resolvers<GraphQLContext> = {
         }
       }
     },
+  },
+  User: {
+    id: ({ id }) => {},
   },
 };
 

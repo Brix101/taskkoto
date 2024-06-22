@@ -6,7 +6,7 @@ type Task implements Node {
   description: String
   status: TaskStatus!
   assignee: User
-  createBy: User
+  createdBy: User
 }
 
 enum TaskStatus {
@@ -31,7 +31,6 @@ input CreateTaskInput {
   description: String
   status: TaskStatus!
   assigneeId: ID
-  creatorId: ID!
 }
 
 input UpdateTaskInput {

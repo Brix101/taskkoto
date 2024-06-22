@@ -11,9 +11,14 @@ const taskResolvers: Resolvers<GraphQLContext> = {
       const id = args.id;
       try {
         const taskRepo = ctx.em.getRepository(TaskEntity);
-        const task = await taskRepo.findOneOrFail({
-          id: Number(id),
-        });
+        const task = await taskRepo.findOneOrFail(
+          {
+            id: Number(id),
+          },
+          {
+            populate: ['*'],
+          },
+        );
 
         return task;
       } catch (error) {
@@ -32,7 +37,7 @@ const taskResolvers: Resolvers<GraphQLContext> = {
     },
     tasks: async (_root, _args, ctx) => {
       try {
-        return await ctx.em.getRepository(TaskEntity).findAll();
+        return await ctx.em.getRepository(TaskEntity).findAll({ populate: ['*'] });
       } catch (error) {
         log.error(error);
         throw new GraphQLError(error.message);
@@ -47,7 +52,7 @@ const taskResolvers: Resolvers<GraphQLContext> = {
         }
 
         const taskInput = new TaskEntity(input);
-        const task = ctx.em.create(TaskEntity, taskInput);
+        const task = ctx.em.create(TaskEntity, { ...taskInput, createdBy: 1 });
         await ctx.em.persistAndFlush(task);
 
         return task;

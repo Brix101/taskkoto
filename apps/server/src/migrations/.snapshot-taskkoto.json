@@ -184,8 +184,8 @@
           "nullable": true,
           "mappedType": "integer"
         },
-        "creator_id": {
-          "name": "creator_id",
+        "created_by_id": {
+          "name": "created_by_id",
           "type": "int",
           "unsigned": false,
           "autoincrement": false,
@@ -223,10 +223,10 @@
           "deleteRule": "set null",
           "updateRule": "cascade"
         },
-        "tasks_creator_id_foreign": {
-          "constraintName": "tasks_creator_id_foreign",
+        "tasks_created_by_id_foreign": {
+          "constraintName": "tasks_created_by_id_foreign",
           "columnNames": [
-            "creator_id"
+            "created_by_id"
           ],
           "localTableName": "public.tasks",
           "referencedColumnNames": [
