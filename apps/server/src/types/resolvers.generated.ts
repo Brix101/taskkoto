@@ -11,12 +11,12 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  Date: { input: any; output: any };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  Date: { input: any; output: any; }
 };
 
 export type Mutation = {
@@ -29,12 +29,14 @@ export type Mutation = {
   updateUser?: Maybe<User>;
 };
 
+
 export type MutationCreateTaskArgs = {
   assignedTo?: InputMaybe<Scalars['ID']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   status: TaskStatus;
   title: Scalars['String']['input'];
 };
+
 
 export type MutationCreateUserArgs = {
   bio?: InputMaybe<Scalars['String']['input']>;
@@ -43,13 +45,16 @@ export type MutationCreateUserArgs = {
   password: Scalars['String']['input'];
 };
 
+
 export type MutationDeleteTaskArgs = {
   id: Scalars['ID']['input'];
 };
 
+
 export type MutationDeleteUserArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 export type MutationUpdateTaskArgs = {
   assignedTo?: InputMaybe<Scalars['ID']['input']>;
@@ -58,6 +63,7 @@ export type MutationUpdateTaskArgs = {
   status?: InputMaybe<TaskStatus>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 export type MutationUpdateUserArgs = {
   bio?: InputMaybe<Scalars['String']['input']>;
@@ -79,9 +85,11 @@ export type Query = {
   users?: Maybe<Array<Maybe<User>>>;
 };
 
+
 export type QueryTaskArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
@@ -101,7 +109,7 @@ export type Task = Node & {
 export enum TaskStatus {
   Done = 'DONE',
   InProgress = 'IN_PROGRESS',
-  Todo = 'TODO',
+  Todo = 'TODO'
 }
 
 export type User = Node & {
@@ -114,34 +122,35 @@ export type User = Node & {
   updatedAt: Scalars['Date']['output'];
 };
 
+
+
 export type ResolverTypeWrapper<T> = Promise<T> | T;
+
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;
 
 export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
 export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
@@ -165,7 +174,7 @@ export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TCo
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
 export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
@@ -177,12 +186,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
+
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
-  Node: (Omit<Task, 'assignedTo'> & { assignedTo?: Maybe<_RefType['User']> }) | UserEntity;
+  Node: ( Omit<Task, 'assignedTo'> & { assignedTo?: Maybe<_RefType['User']> } ) | ( UserEntity );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -218,12 +228,7 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'status' | 'title'>>;
-  createUser?: Resolver<
-    Maybe<ResolversTypes['User']>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationCreateUserArgs, 'email' | 'fullName' | 'password'>
-  >;
+  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'fullName' | 'password'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'id'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   updateTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'id'>>;
@@ -271,3 +276,4 @@ export type Resolvers<ContextType = any> = {
   Task?: TaskResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
+
