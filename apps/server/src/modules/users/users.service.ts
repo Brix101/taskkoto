@@ -1,4 +1,4 @@
-import { initORM } from '@/db.js';
+import { initORM } from '@/lib/db.js';
 import { UserEntity } from './entities/user.entity.js';
 
 export async function getUserByIds(ids: number[]): Promise<UserEntity[]> {

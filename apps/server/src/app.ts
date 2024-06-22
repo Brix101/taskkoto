@@ -1,5 +1,5 @@
 import express from 'express';
-import { initORM } from './db.js';
+import { initORM } from './lib/db.js';
 import { initializeYoga } from './lib/graphql/yoga.js';
 
 export const buildApp = async (app: ReturnType<typeof express>) => {

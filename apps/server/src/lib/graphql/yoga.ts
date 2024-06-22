@@ -1,4 +1,4 @@
-import { DBServices } from '@/db.js';
+import { DBServices } from '@/lib/db.js';
 import { getUserByIds } from '@/modules/users/users.service.js';
 import Dataloader from 'dataloader';
 import { YogaInitialContext, createSchema, createYoga } from 'graphql-yoga';
