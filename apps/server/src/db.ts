@@ -21,6 +21,6 @@ export async function initORM(options?: Options) {
 
   return (cache = {
     orm,
-    em: orm.em,
+    em: orm.em.fork(),
   } as DBServices);
 }

@@ -45,11 +45,10 @@ const userResolvers: Resolvers<GraphQLContext> = {
         if (!input) {
           throw new GraphQLError('Add input', {});
         }
-        const em = ctx.em.fork();
 
         const userInput = new UserEntity(input);
-        const user = em.create(UserEntity, userInput);
-        await em.persistAndFlush(user);
+        const user = ctx.em.create(UserEntity, userInput);
+        await ctx.em.persistAndFlush(user);
 
         return user;
       } catch (error) {
