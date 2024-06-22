@@ -65,15 +65,16 @@ const createTaskMutation = graphql(`
   }
 `);
 
-type MutationApiType = NonUndefined<(typeof createTaskMutation)["__apiType"]>;
-type MutationInput = Parameters<MutationApiType>[0];
+type MutationInput = Parameters<
+  NonUndefined<(typeof createTaskMutation)["__apiType"]>
+>[0];
 
 const TASK_KEY = ["tasks"];
 
 const useCreateTask = () => {
   return useMutation({
     mutationKey: ["createTask"],
-    onMutate: async (variables: MutationInput) => {
+    onMutate: async (variables) => {
       queryClient.cancelQueries({ queryKey: TASK_KEY });
       const previousValue = queryClient.getQueryData(["tasks"]);
       queryClient.setQueryData(TASK_KEY, (old: any) => {
@@ -82,17 +83,15 @@ const useCreateTask = () => {
             ...old.tasks,
             {
               id: "temp-id",
-              title: variables.input?.title,
-              description: variables.input?.description,
-              status: variables.input?.status,
+              title: variables?.title,
+              description: variables?.description,
+              status: variables?.status,
             },
           ],
         };
       });
       return { previousValue };
     },
-    mutationFn: async (variables: MutationInput) =>
-      request("http://localhost:5000/graphql", createTaskMutation, variables),
     onSuccess: (data) => {
       queryClient.setQueryData(TASK_KEY, (old: any) => {
         return {
@@ -106,6 +105,8 @@ const useCreateTask = () => {
     onError: (error, variables, context) => {
       queryClient.setQueryData(TASK_KEY, context?.previousValue);
     },
+    mutationFn: async (input: MutationInput["input"]) =>
+      request("http://localhost:5000/graphql", createTaskMutation, { input }),
   });
 };
 
@@ -119,11 +120,9 @@ function Sample() {
 
   function handleMutate() {
     mutate({
-      input: {
-        title: "New task",
-        description: "New task description",
-        status: "DONE",
-      },
+      title: "New task",
+      description: "New task description",
+      status: "DONE",
     });
   }
 
