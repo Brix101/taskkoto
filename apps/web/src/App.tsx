@@ -10,6 +10,7 @@ import { graphql } from "gql.tada";
 import { request } from "graphql-request";
 import { NonUndefined } from "react-hook-form";
 import { Button } from "./components/ui/button";
+import { cn } from "./lib/utils";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const query = graphql(`
     tasks {
       id
       title
+      description
       assignee {
         id
         email
@@ -46,11 +48,19 @@ const createTaskMutation = graphql(`
   mutation createTask($input: CreateTaskInput) {
     createTask(input: $input) {
       id
-      createdAt
-      updatedAt
       title
       description
       status
+      assignee {
+        id
+        email
+        fullName
+      }
+      createdBy {
+        id
+        email
+        fullName
+      }
     }
   }
 `);
@@ -58,21 +68,50 @@ const createTaskMutation = graphql(`
 type MutationApiType = NonUndefined<(typeof createTaskMutation)["__apiType"]>;
 type MutationInput = Parameters<MutationApiType>[0];
 
+const TASK_KEY = ["tasks"];
+
 const useCreateTask = () => {
   return useMutation({
     mutationKey: ["createTask"],
+    onMutate: async (variables: MutationInput) => {
+      queryClient.cancelQueries({ queryKey: TASK_KEY });
+      const previousValue = queryClient.getQueryData(["tasks"]);
+      queryClient.setQueryData(TASK_KEY, (old: any) => {
+        return {
+          tasks: [
+            ...old.tasks,
+            {
+              id: "temp-id",
+              title: variables.input?.title,
+              description: variables.input?.description,
+              status: variables.input?.status,
+            },
+          ],
+        };
+      });
+      return { previousValue };
+    },
     mutationFn: async (variables: MutationInput) =>
       request("http://localhost:5000/graphql", createTaskMutation, variables),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      }),
+    onSuccess: (data) => {
+      queryClient.setQueryData(TASK_KEY, (old: any) => {
+        return {
+          tasks: [
+            ...old.tasks.filter((task: any) => task.id !== "temp-id"),
+            data.createTask,
+          ],
+        };
+      });
+    },
+    onError: (error, variables, context) => {
+      queryClient.setQueryData(TASK_KEY, context?.previousValue);
+    },
   });
 };
 
 function Sample() {
   const { data } = useQuery({
-    queryKey: ["tasks"],
+    queryKey: TASK_KEY,
     queryFn: async () => request("http://localhost:5000/graphql", query),
   });
 
@@ -94,7 +133,12 @@ function Sample() {
       <Button onClick={handleMutate}>addd</Button>
       <ul>
         {data?.tasks?.map((task) => (
-          <li key={task?.id}>
+          <li
+            key={task?.id}
+            className={cn(
+              task?.createdBy ? "font-bold text-gray-900" : "text-gray-600",
+            )}
+          >
             {task?.title}--{task?.id}
           </li>
         ))}
