@@ -5,10 +5,10 @@ import { YogaInitialContext, createSchema, createYoga } from 'graphql-yoga';
 import resolvers from './resolvers.js';
 import typeDefs from './type-defs.js';
 
-const userLoader = new Dataloader(getUserByIds);
+const userDataloader = new Dataloader(getUserByIds);
 
 type ServicesLoader = DBServices & {
-  userLoader: typeof userLoader;
+  userDataloader: typeof userDataloader;
 };
 
 export type GraphQLContext = YogaInitialContext & ServicesLoader;
@@ -24,6 +24,6 @@ export function initializeYoga(dbServices: DBServices) {
   return createYoga<ServerContext, GraphQLContext>({
     schema,
     graphiql: true,
-    context: (ctx) => ({ ...ctx, ...dbServices, userLoader }),
+    context: (ctx) => ({ ...ctx, ...dbServices, userDataloader }),
   });
 }

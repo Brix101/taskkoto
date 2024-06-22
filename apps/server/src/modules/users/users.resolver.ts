@@ -9,7 +9,7 @@ const userResolvers: Resolvers<GraphQLContext> = {
   Query: {
     user: async (_root, { id }, ctx) => {
       try {
-        const user = await ctx.userLoader.load(Number(id));
+        const user = await ctx.userDataloader.load(Number(id));
         return user;
       } catch (error) {
         if (error instanceof NotFoundError) {
@@ -60,27 +60,27 @@ const userResolvers: Resolvers<GraphQLContext> = {
   },
   User: {
     id: async ({ id }, _args, ctx): Promise<string> => {
-      const user = await ctx.userLoader.load(id);
+      const user = await ctx.userDataloader.load(id);
       return user.id.toString();
     },
     email: async ({ id }, _args, ctx): Promise<string> => {
-      const { email } = await ctx.userLoader.load(id);
+      const { email } = await ctx.userDataloader.load(id);
       return email;
     },
     fullName: async ({ id }, _args, ctx): Promise<string> => {
-      const { fullName } = await ctx.userLoader.load(id);
+      const { fullName } = await ctx.userDataloader.load(id);
       return fullName;
     },
     bio: async ({ id }, _args, ctx): Promise<string> => {
-      const { bio } = await ctx.userLoader.load(id);
+      const { bio } = await ctx.userDataloader.load(id);
       return bio ?? '';
     },
     createdAt: async ({ id }, _args, ctx): Promise<string> => {
-      const { createdAt } = await ctx.userLoader.load(id);
+      const { createdAt } = await ctx.userDataloader.load(id);
       return createdAt.toISOString();
     },
     updatedAt: async ({ id }, _args, ctx): Promise<string> => {
-      const { updatedAt } = await ctx.userLoader.load(id);
+      const { updatedAt } = await ctx.userDataloader.load(id);
       return updatedAt.toISOString();
     },
   },
