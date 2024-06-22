@@ -24,6 +24,7 @@
     "@mikro-orm/sql-highlighter": "^1.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "dataloader": "^2.2.2",
     "express": "^4.19.2",
     "graphql": "^16.8.1",
     "graphql-yoga": "^5.3.1",

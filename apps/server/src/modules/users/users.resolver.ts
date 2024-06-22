@@ -9,11 +9,7 @@ const userResolvers: Resolvers<GraphQLContext> = {
   Query: {
     user: async (_root, { id }, ctx) => {
       try {
-        const userRepo = ctx.em.getRepository(UserEntity);
-        const user = await userRepo.findOneOrFail({
-          id: Number(id),
-        });
-
+        const user = await ctx.userLoader.load(Number(id));
         return user;
       } catch (error) {
         if (error instanceof NotFoundError) {
@@ -64,52 +60,28 @@ const userResolvers: Resolvers<GraphQLContext> = {
   },
   User: {
     id: async ({ id }, _args, ctx): Promise<string> => {
-      const userRepo = ctx.em.getRepository(UserEntity);
-      const user = await userRepo.findOneOrFail({
-        id: Number(id),
-      });
-
+      const user = await ctx.userLoader.load(id);
       return user.id.toString();
     },
     email: async ({ id }, _args, ctx): Promise<string> => {
-      const userRepo = ctx.em.getRepository(UserEntity);
-      const user = await userRepo.findOneOrFail({
-        id: Number(id),
-      });
-
-      return user.email;
+      const { email } = await ctx.userLoader.load(id);
+      return email;
     },
     fullName: async ({ id }, _args, ctx): Promise<string> => {
-      const userRepo = ctx.em.getRepository(UserEntity);
-      const user = await userRepo.findOneOrFail({
-        id: Number(id),
-      });
-
-      return user.fullName;
+      const { fullName } = await ctx.userLoader.load(id);
+      return fullName;
     },
     bio: async ({ id }, _args, ctx): Promise<string> => {
-      const userRepo = ctx.em.getRepository(UserEntity);
-      const user = await userRepo.findOneOrFail({
-        id: Number(id),
-      });
-
-      return user.bio ?? '';
+      const { bio } = await ctx.userLoader.load(id);
+      return bio ?? '';
     },
     createdAt: async ({ id }, _args, ctx): Promise<string> => {
-      const userRepo = ctx.em.getRepository(UserEntity);
-      const user = await userRepo.findOneOrFail({
-        id: Number(id),
-      });
-
-      return user.createdAt.toISOString();
+      const { createdAt } = await ctx.userLoader.load(id);
+      return createdAt.toISOString();
     },
     updatedAt: async ({ id }, _args, ctx): Promise<string> => {
-      const userRepo = ctx.em.getRepository(UserEntity);
-      const user = await userRepo.findOneOrFail({
-        id: Number(id),
-      });
-
-      return user.updatedAt.toISOString();
+      const { updatedAt } = await ctx.userLoader.load(id);
+      return updatedAt.toISOString();
     },
   },
 };
