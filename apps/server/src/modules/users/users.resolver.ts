@@ -63,7 +63,54 @@ const userResolvers: Resolvers<GraphQLContext> = {
     },
   },
   User: {
-    id: ({ id }) => {},
+    id: async ({ id }, _args, ctx): Promise<string> => {
+      const userRepo = ctx.em.getRepository(UserEntity);
+      const user = await userRepo.findOneOrFail({
+        id: Number(id),
+      });
+
+      return user.id.toString();
+    },
+    email: async ({ id }, _args, ctx): Promise<string> => {
+      const userRepo = ctx.em.getRepository(UserEntity);
+      const user = await userRepo.findOneOrFail({
+        id: Number(id),
+      });
+
+      return user.email;
+    },
+    fullName: async ({ id }, _args, ctx): Promise<string> => {
+      const userRepo = ctx.em.getRepository(UserEntity);
+      const user = await userRepo.findOneOrFail({
+        id: Number(id),
+      });
+
+      return user.fullName;
+    },
+    bio: async ({ id }, _args, ctx): Promise<string> => {
+      const userRepo = ctx.em.getRepository(UserEntity);
+      const user = await userRepo.findOneOrFail({
+        id: Number(id),
+      });
+
+      return user.bio ?? '';
+    },
+    createdAt: async ({ id }, _args, ctx): Promise<string> => {
+      const userRepo = ctx.em.getRepository(UserEntity);
+      const user = await userRepo.findOneOrFail({
+        id: Number(id),
+      });
+
+      return user.createdAt.toISOString();
+    },
+    updatedAt: async ({ id }, _args, ctx): Promise<string> => {
+      const userRepo = ctx.em.getRepository(UserEntity);
+      const user = await userRepo.findOneOrFail({
+        id: Number(id),
+      });
+
+      return user.updatedAt.toISOString();
+    },
   },
 };
 

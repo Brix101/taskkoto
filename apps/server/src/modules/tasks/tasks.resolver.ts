@@ -35,9 +35,9 @@ const taskResolvers: Resolvers<GraphQLContext> = {
         }
       }
     },
-    tasks: async (_root, _args, ctx) => {
+    tasks: async (_root, _args, ctx, info) => {
       try {
-        return await ctx.em.getRepository(TaskEntity).findAll({ populate: ['*'] });
+        return await ctx.em.getRepository(TaskEntity).findAll();
       } catch (error) {
         log.error(error);
         throw new GraphQLError(error.message);
