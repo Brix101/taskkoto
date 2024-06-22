@@ -2,31 +2,43 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
-    "lib": ["ESNext"],
-
-    "rootDirs": ["src"],
+    "lib": [
+      "ESNext"
+    ],
+    "rootDirs": [
+      "src"
+    ],
     "outDir": "dist",
-
     "strict": false,
     "noImplicitAny": false,
     "strictNullChecks": true,
     "noImplicitReturns": true,
-
+    "typeRoots": [
+      "./@types",
+      "./node_modules/@types"
+    ],
     "baseUrl": ".",
-    "typeRoots": ["./@types", "./node_modules/@types"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
-
     "esModuleInterop": true,
-
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "declaration": true,
     "experimentalDecorators": true
   },
-  "include": ["./src/**/*.ts", "codegen.ts", "mikro-orm.config.ts", "src/modules/common/common.entity.ts"],
-  "exclude": ["node_modules", "dist"],
+  "include": [
+    "./src/**/*.ts",
+    "codegen.ts",
+    "mikro-orm.config.ts",
+    "src/modules/common/common.entity.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
   "ts-node": {
     "esm": true,
     "transpileOnly": true,

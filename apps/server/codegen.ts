@@ -8,7 +8,11 @@ const config: CodegenConfig = {
       plugins: ['typescript', 'typescript-resolvers'],
       config: {
         mappers: {
-          User: './../modules/users/entities/user.entity.js#UserEntity',
+          User: '../modules/users/entities/user.entity.js#UserEntity',
+          Task: '../modules/tasks/entities/task.entity.js#TaskEntity',
+        },
+        enumValues: {
+          TaskStatus: '../modules/tasks/entities/task.entity.js#TaskStatus',
         },
       },
     },

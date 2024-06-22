@@ -1,5 +1,7 @@
+import { TaskStatus } from '../modules/tasks/entities/task.entity.js';
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { UserEntity } from './../modules/users/entities/user.entity.js';
+import { UserEntity } from '../modules/users/entities/user.entity.js';
+import { TaskEntity } from '../modules/tasks/entities/task.entity.js';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -7,8 +9,8 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
+export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -110,11 +112,7 @@ export type Task = Node & {
   updatedAt: Scalars['Date']['output'];
 };
 
-export enum TaskStatus {
-  Done = 'DONE',
-  InProgress = 'IN_PROGRESS',
-  Todo = 'TODO'
-}
+export { TaskStatus };
 
 export type UpdateTaskInput = {
   assigneeId?: InputMaybe<Scalars['ID']['input']>;
@@ -210,7 +208,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = {
-  Node: ( Omit<Task, 'assignee' | 'createBy'> & { assignee?: Maybe<_RefType['User']>, createBy?: Maybe<_RefType['User']> } ) | ( UserEntity );
+  Node: ( TaskEntity ) | ( UserEntity );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -224,7 +222,7 @@ export type ResolversTypes = {
   Node: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Node']>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  Task: ResolverTypeWrapper<Omit<Task, 'assignee' | 'createBy'> & { assignee?: Maybe<ResolversTypes['User']>, createBy?: Maybe<ResolversTypes['User']> }>;
+  Task: ResolverTypeWrapper<TaskEntity>;
   TaskStatus: TaskStatus;
   UpdateTaskInput: UpdateTaskInput;
   UpdateUserInput: UpdateUserInput;
@@ -242,7 +240,7 @@ export type ResolversParentTypes = {
   Node: ResolversInterfaceTypes<ResolversParentTypes>['Node'];
   Query: {};
   String: Scalars['String']['output'];
-  Task: Omit<Task, 'assignee' | 'createBy'> & { assignee?: Maybe<ResolversParentTypes['User']>, createBy?: Maybe<ResolversParentTypes['User']> };
+  Task: TaskEntity;
   UpdateTaskInput: UpdateTaskInput;
   UpdateUserInput: UpdateUserInput;
   User: UserEntity;
@@ -285,6 +283,8 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type TaskStatusResolvers = EnumResolverSignature<{ DONE?: any, IN_PROGRESS?: any, TODO?: any }, ResolversTypes['TaskStatus']>;
+
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   bio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
@@ -301,6 +301,7 @@ export type Resolvers<ContextType = any> = {
   Node?: NodeResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Task?: TaskResolvers<ContextType>;
+  TaskStatus?: TaskStatusResolvers;
   User?: UserResolvers<ContextType>;
 };
 
