@@ -42,6 +42,8 @@ const taskFragment = graphql(`
   }
 `);
 
+type Task = ReturnType<NonUndefined<(typeof taskFragment)["__apiType"]>>;
+
 const query = graphql(
   `
     query Tasks {
@@ -81,7 +83,6 @@ const useCreateTask = () => {
           tasks: [
             ...old.tasks,
             {
-              id: "temp-id",
               title: variables?.title,
               description: variables?.description,
               status: variables?.status,
@@ -94,10 +95,7 @@ const useCreateTask = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(TASK_KEY, (old: any) => {
         return {
-          tasks: [
-            ...old.tasks.filter((task: any) => task.id !== "temp-id"),
-            data.createTask,
-          ],
+          tasks: [...old.tasks.filter((task: any) => task.id), data.createTask],
         };
       });
     },
@@ -111,7 +109,6 @@ const useCreateTask = () => {
         { input },
       );
 
-      console.log(data);
       return data;
     },
   });
@@ -122,7 +119,8 @@ function Sample() {
     queryKey: TASK_KEY,
     queryFn: async () => {
       const data = await request("http://localhost:5000/graphql", query);
-      return readFragment(taskFragment, data.tasks ?? []);
+      const tasks = readFragment(taskFragment, data.tasks ?? []);
+      return { tasks };
     },
   });
 
@@ -140,9 +138,9 @@ function Sample() {
     <>
       <Button onClick={handleMutate}>addd</Button>
       <ul>
-        {data?.map((task) => (
+        {data?.tasks?.map((task, index) => (
           <li
-            key={task?.id}
+            key={`${index}-${task?.id}`}
             className={cn(
               task?.createdBy ? "font-bold text-gray-900" : "text-gray-600",
             )}
