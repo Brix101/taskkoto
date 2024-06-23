@@ -6,7 +6,7 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { graphql } from "gql.tada";
+import { graphql, readFragment } from "gql.tada";
 import { request } from "graphql-request";
 import { NonUndefined } from "react-hook-form";
 import { Button } from "./components/ui/button";
@@ -24,46 +24,45 @@ function App() {
   );
 }
 
-const query = graphql(`
-  query Tasks {
-    tasks {
+const taskFragment = graphql(`
+  fragment TaskFragment on Task {
+    id
+    title
+    description
+    assignee {
       id
-      title
-      description
-      assignee {
-        id
-        email
-        fullName
-      }
-      createdBy {
-        id
-        email
-        fullName
-      }
+      email
+      fullName
+    }
+    createdBy {
+      id
+      email
+      fullName
     }
   }
 `);
 
-const createTaskMutation = graphql(`
-  mutation createTask($input: CreateTaskInput) {
-    createTask(input: $input) {
-      id
-      title
-      description
-      status
-      assignee {
-        id
-        email
-        fullName
-      }
-      createdBy {
-        id
-        email
-        fullName
+const query = graphql(
+  `
+    query Tasks {
+      tasks {
+        ...TaskFragment
       }
     }
-  }
-`);
+  `,
+  [taskFragment],
+);
+
+const createTaskMutation = graphql(
+  `
+    mutation createTask($input: CreateTaskInput) {
+      createTask(input: $input) {
+        ...TaskFragment
+      }
+    }
+  `,
+  [taskFragment],
+);
 
 type MutationInput = Parameters<
   NonUndefined<(typeof createTaskMutation)["__apiType"]>
@@ -102,18 +101,29 @@ const useCreateTask = () => {
         };
       });
     },
-    onError: (error, variables, context) => {
+    onError: (_error, _variables, context) => {
       queryClient.setQueryData(TASK_KEY, context?.previousValue);
     },
-    mutationFn: async (input: MutationInput["input"]) =>
-      request("http://localhost:5000/graphql", createTaskMutation, { input }),
+    mutationFn: async (input: MutationInput["input"]) => {
+      const data = await request(
+        "http://localhost:5000/graphql",
+        createTaskMutation,
+        { input },
+      );
+
+      console.log(data);
+      return data;
+    },
   });
 };
 
 function Sample() {
   const { data } = useQuery({
     queryKey: TASK_KEY,
-    queryFn: async () => request("http://localhost:5000/graphql", query),
+    queryFn: async () => {
+      const data = await request("http://localhost:5000/graphql", query);
+      return readFragment(taskFragment, data.tasks ?? []);
+    },
   });
 
   const { mutate } = useCreateTask();
@@ -128,10 +138,9 @@ function Sample() {
 
   return (
     <>
-      <h1 className="bg-red-300 p-10">Hello world</h1>
       <Button onClick={handleMutate}>addd</Button>
       <ul>
-        {data?.tasks?.map((task) => (
+        {data?.map((task) => (
           <li
             key={task?.id}
             className={cn(
