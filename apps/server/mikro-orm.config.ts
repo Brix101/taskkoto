@@ -2,6 +2,7 @@ import { GeneratedCacheAdapter, defineConfig } from '@mikro-orm/core';
 import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations'; // or `@mikro-orm/migrations-mongodb`
 import { Options, PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
+import { SeedManager, Seeder } from '@mikro-orm/seeder';
 import { existsSync, readFileSync } from 'node:fs';
 
 const options = {} as Options;
@@ -36,7 +37,7 @@ export default defineConfig({
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   highlighter: new SqlHighlighter(),
-  extensions: [Migrator],
+  extensions: [Migrator, SeedManager],
   debug: true,
   // for vitest to get around `TypeError: Unknown file extension ".ts"` (ERR_UNKNOWN_FILE_EXTENSION)
   dynamicImportProvider: (id) => import(id),
