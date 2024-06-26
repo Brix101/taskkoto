@@ -32,12 +32,12 @@ const taskFragment = graphql(`
     assignee {
       id
       email
-      fullName
+      name
     }
     createdBy {
       id
       email
-      fullName
+      name
     }
   }
 `);

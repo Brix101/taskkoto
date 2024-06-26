@@ -2,7 +2,7 @@ type User implements Node {
   id: ID!
   createdAt: Date!
   updatedAt: Date!
-  fullName: String!
+  name: String!
   email: String!
   bio: String
 }
@@ -19,14 +19,14 @@ type Mutation {
 }
 
 input CreateUserInput {
-  fullName: String!
+  name: String!
   email: String!
   password: String!
   bio: String
 }
 
 input UpdateUserInput {
-  fullName: String
+  name: String
   email: String
   password: String
   bio: String

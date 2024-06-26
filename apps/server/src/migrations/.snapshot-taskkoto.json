@@ -35,8 +35,8 @@
           "length": 6,
           "mappedType": "datetime"
         },
-        "full_name": {
-          "name": "full_name",
+        "name": {
+          "name": "name",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,

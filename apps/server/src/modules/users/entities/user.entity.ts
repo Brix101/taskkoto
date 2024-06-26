@@ -5,7 +5,7 @@ import { CommonEntity } from '../../common/common.entity.js';
 @Entity({ tableName: 'users' })
 export class UserEntity extends CommonEntity {
   @Property()
-  fullName!: string;
+  name!: string;
 
   @Property({ unique: true })
   email!: string;
@@ -19,7 +19,7 @@ export class UserEntity extends CommonEntity {
   constructor(input: CreateUserInput) {
     super();
     this.email = input.email;
-    this.fullName = input.fullName;
+    this.name = input.fullName;
     this.password = input.password;
     this.bio = input.bio;
   }

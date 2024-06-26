@@ -67,9 +67,9 @@ const userResolvers: Resolvers<GraphQLContext> = {
       const { email } = await ctx.userDataloader.load(id);
       return email;
     },
-    fullName: async ({ id }, _args, ctx): Promise<string> => {
-      const { fullName } = await ctx.userDataloader.load(id);
-      return fullName;
+    name: async ({ id }, _args, ctx): Promise<string> => {
+      const { name } = await ctx.userDataloader.load(id);
+      return name;
     },
     bio: async ({ id }, _args, ctx): Promise<string> => {
       const { bio } = await ctx.userDataloader.load(id);

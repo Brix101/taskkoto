@@ -9,7 +9,7 @@
     "test": "vitest",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{js,ts,graphql}\"",
-    "generate": "graphql-codegen",
+    "gql:generate": "graphql-codegen",
     "orm:debug": "mikro-orm-esm debug",
     "migration:create": "mikro-orm-esm migration:create",
     "migration:up": "mikro-orm-esm migration:up",
