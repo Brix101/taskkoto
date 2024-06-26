@@ -40,7 +40,7 @@ const taskResolvers: Resolvers<GraphQLContext> = {
             length: cursor.length,
           },
           edges: cursor.items.map((item: TaskEntity) => ({
-            cursor: item.id.toString(),
+            cursor: item.id,
             node: item,
           })),
         };
@@ -74,10 +74,18 @@ const taskResolvers: Resolvers<GraphQLContext> = {
       }
     },
   },
+  TaskEdge: {
+    cursor: async ({ node }, _args, _ctx): Promise<string> => {
+      return node.id.toString();
+    },
+    node: async ({ cursor }, _args, ctx): Promise<TaskEntity> => {
+      return ctx.taskDataloader.load(cursor);
+    },
+  },
   Task: {
     id: async ({ id }, _args, ctx): Promise<string> => {
-      const user = await ctx.taskDataloader.load(id);
-      return user.id.toString();
+      const task = await ctx.taskDataloader.load(id);
+      return task.id.toString();
     },
     title: async ({ id }, _args, ctx): Promise<string> => {
       const { title } = await ctx.taskDataloader.load(id);
