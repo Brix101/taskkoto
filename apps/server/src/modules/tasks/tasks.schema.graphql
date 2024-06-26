@@ -15,9 +15,19 @@ enum TaskStatus {
   DONE
 }
 
+type TaskEdge {
+  cursor: Cursor!
+  node: Task!
+}
+
+type TaskConnection {
+  pageInfo: PageInfo!
+  edges: [TaskEdge]!
+}
+
 type Query {
   task(id: ID!): Task
-  tasks: [Task]
+  tasks(first: Int, after: Cursor): TaskConnection!
 }
 
 type Mutation {
@@ -30,7 +40,7 @@ input CreateTaskInput {
   title: String!
   description: String
   status: TaskStatus!
-  assigneeId: ID
+  assigneeId: ID!
 }
 
 input UpdateTaskInput {

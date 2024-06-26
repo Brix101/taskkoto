@@ -1,8 +1,9 @@
 import { GraphQLContext } from '@/lib/graphql/yoga.js';
 import { log } from '@/lib/logger.js';
-import { Resolvers } from '@/types/resolvers.generated.js';
-import { NotFoundError, UniqueConstraintViolationException } from '@mikro-orm/core';
+import { Resolvers, TaskStatus } from '@/types/resolvers.generated.js';
+import { NotFoundError, QueryOrder, UniqueConstraintViolationException } from '@mikro-orm/core';
 import { GraphQLError } from 'graphql';
+import { UserEntity } from '../users/entities/user.entity.js';
 import { TaskEntity } from './entities/task.entity.js';
 
 const taskResolvers: Resolvers<GraphQLContext> = {
@@ -10,17 +11,7 @@ const taskResolvers: Resolvers<GraphQLContext> = {
     task: async (_parent, args, ctx) => {
       const id = args.id;
       try {
-        const taskRepo = ctx.em.getRepository(TaskEntity);
-        const task = await taskRepo.findOneOrFail(
-          {
-            id: Number(id),
-          },
-          {
-            populate: ['*'],
-          },
-        );
-
-        return task;
+        return await ctx.taskDataloader.load(Number(id));
       } catch (error) {
         if (error instanceof NotFoundError) {
           throw new GraphQLError(`Task not found with id '${id}'.`, {
@@ -35,11 +26,26 @@ const taskResolvers: Resolvers<GraphQLContext> = {
         }
       }
     },
-    tasks: async (_parent, _args, ctx, info) => {
+    tasks: async (_parent, { first, after }, ctx) => {
       try {
-        return await ctx.em.getRepository(TaskEntity).findAll();
+        const cursor = await ctx.em.findByCursor(TaskEntity, {}, { orderBy: { title: QueryOrder.ASC }, first: first ?? 10, after });
+
+        return {
+          pageInfo: {
+            hasNextPage: cursor.hasNextPage,
+            hasPrevPage: cursor.hasPrevPage,
+            startCursor: cursor.startCursor,
+            endCursor: cursor.endCursor,
+            totalCount: cursor.totalCount,
+            length: cursor.length,
+          },
+          edges: cursor.items.map((item: TaskEntity) => ({
+            cursor: item.id.toString(),
+            node: item,
+          })),
+        };
       } catch (error) {
-        log.error(error);
+        log.error(error.message);
         throw new GraphQLError(error.message);
       }
     },
@@ -66,6 +72,40 @@ const taskResolvers: Resolvers<GraphQLContext> = {
           throw new GraphQLError(error.message);
         }
       }
+    },
+  },
+  Task: {
+    id: async ({ id }, _args, ctx): Promise<string> => {
+      const user = await ctx.taskDataloader.load(id);
+      return user.id.toString();
+    },
+    title: async ({ id }, _args, ctx): Promise<string> => {
+      const { title } = await ctx.taskDataloader.load(id);
+      return title;
+    },
+    description: async ({ id }, _args, ctx): Promise<string> => {
+      const { description } = await ctx.taskDataloader.load(id);
+      return description ?? '';
+    },
+    status: async ({ id }, _args, ctx): Promise<TaskStatus> => {
+      const { status } = await ctx.taskDataloader.load(id);
+      return status;
+    },
+    createdAt: async ({ id }, _args, ctx): Promise<string> => {
+      const { createdAt } = await ctx.taskDataloader.load(id);
+      return createdAt.toISOString();
+    },
+    updatedAt: async ({ id }, _args, ctx): Promise<string> => {
+      const { updatedAt } = await ctx.taskDataloader.load(id);
+      return updatedAt.toISOString();
+    },
+    createdBy: async ({ id }, _args, ctx): Promise<UserEntity> => {
+      const { createdBy } = await ctx.taskDataloader.load(id);
+      return createdBy;
+    },
+    assignee: async ({ id }, _args, ctx): Promise<UserEntity> => {
+      const { assignee } = await ctx.taskDataloader.load(id);
+      return assignee;
     },
   },
 };

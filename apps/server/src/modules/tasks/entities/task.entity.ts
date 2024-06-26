@@ -1,7 +1,7 @@
-import { Property, Enum, ManyToOne, Entity } from '@mikro-orm/core';
+import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
+import { CreateTaskInput, User } from '../../../types/resolvers.generated.js';
 import { CommonEntity } from '../../common/common.entity.js';
 import { UserEntity } from '../../users/entities/user.entity.js';
-import { CreateTaskInput } from '../../../types/resolvers.generated.js';
 
 export enum TaskStatus {
   TODO = 'TODO',
@@ -21,7 +21,7 @@ export class TaskEntity extends CommonEntity {
   status: TaskStatus = TaskStatus.TODO;
 
   @ManyToOne(() => UserEntity)
-  assignee?: UserEntity;
+  assignee: UserEntity;
 
   @ManyToOne(() => UserEntity)
   createdBy!: UserEntity;
@@ -32,6 +32,18 @@ export class TaskEntity extends CommonEntity {
     this.description = input.description ?? '';
     this.status = input.status;
     this.assignee = input.assigneeId as unknown as UserEntity;
-    this.createdBy = input.creatorId as unknown as UserEntity;
+  }
+
+  toJSON() {
+    return {
+      id: this.id.toString(),
+      createdAt: this.createdAt,
+      status: this.status,
+      title: this.title,
+      updatedAt: this.updatedAt,
+      description: this.description,
+      createdBy: this.createdBy as unknown as User,
+      assignee: this.assignee as unknown as User,
+    };
   }
 }
