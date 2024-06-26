@@ -11,8 +11,9 @@
     "format": "prettier --write \"src/**/*.{js,ts,graphql}\"",
     "generate": "graphql-codegen",
     "orm:debug": "mikro-orm-esm debug",
-    "orm:migrate": "mikro-orm-esm migration:create",
-    "orm:check": "mikro-orm-esm migration:check"
+    "migration:create": "mikro-orm-esm migration:create",
+    "migration:up": "mikro-orm-esm migration:up",
+    "seeder:run": "mikro-orm-esm seeder:run"
   },
   "keywords": [],
   "dependencies": {
