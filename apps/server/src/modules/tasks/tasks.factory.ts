@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Connection, EntityData, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
 import { Factory } from '@mikro-orm/seeder';
-import { TaskEntity } from './entities/task.entity.js';
+import { TaskEntity, TaskStatus } from './entities/task.entity.js';
 
 export class TaskFactory extends Factory<TaskEntity> {
   model = TaskEntity;
@@ -22,11 +22,15 @@ export class TaskFactory extends Factory<TaskEntity> {
       assignee = assignee === 100 ? assignee - 1 : assignee + 1;
     }
 
+    const statuses = Object.values(TaskStatus);
+    const status = statuses[faker.number.int({ min: 0, max: statuses.length - 1 })];
+
     return {
       title: taskTitle,
       description: faker.lorem.sentence(),
       assignee: assignee,
       createdBy: this.createdBy,
+      status: status,
     };
   }
 }

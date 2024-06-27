@@ -348,7 +348,7 @@ export type TaskEdgeResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TaskStatusResolvers = EnumResolverSignature<{ DONE?: any, IN_PROGRESS?: any, TODO?: any }, ResolversTypes['TaskStatus']>;
+export type TaskStatusResolvers = EnumResolverSignature<{ BACKLOG?: any, CANCELLED?: any, DONE?: any, IN_PROGRESS?: any, TODO?: any }, ResolversTypes['TaskStatus']>;
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   bio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

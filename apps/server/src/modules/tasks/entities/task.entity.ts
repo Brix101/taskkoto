@@ -4,9 +4,11 @@ import { CommonEntity } from '../../common/common.entity.js';
 import { UserEntity } from '../../users/entities/user.entity.js';
 
 export enum TaskStatus {
+  BACKLOG = 'BACKLOG',
   TODO = 'TODO',
   IN_PROGRESS = 'IN_PROGRESS',
   DONE = 'DONE',
+  CANCELLED = 'CANCELLED',
 }
 
 @Entity({ tableName: 'tasks' })
