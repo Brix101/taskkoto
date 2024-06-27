@@ -14,7 +14,6 @@ export class TaskFactory extends Factory<TaskEntity> {
 
   protected definition(): EntityData<TaskEntity> {
     const hacker = faker.hacker;
-    const taskTitle = `${hacker.verb()} ${hacker.noun()}`;
     let assignee = faker.number.int({ min: 1, max: 100 });
 
     // Ensure assignee is not the same as createdBy
@@ -23,14 +22,13 @@ export class TaskFactory extends Factory<TaskEntity> {
     }
 
     const statuses = Object.values(TaskStatus);
-    const status = statuses[faker.number.int({ min: 0, max: statuses.length - 1 })];
 
     return {
-      title: taskTitle,
-      description: faker.lorem.sentence(),
+      title: `${hacker.verb()} the ${hacker.adjective()} ${hacker.noun()}`,
+      description: hacker.phrase().replace(/^./, (letter) => letter.toUpperCase()),
       assignee: assignee,
       createdBy: this.createdBy,
-      status: status,
+      status: faker.helpers.arrayElement(statuses),
     };
   }
 }
